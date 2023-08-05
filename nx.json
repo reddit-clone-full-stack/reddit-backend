@@ -40,6 +40,5 @@
 				"linter": "eslint"
 			}
 		}
-	},
-	"defaultProject": "frontend"
+	}
 }
