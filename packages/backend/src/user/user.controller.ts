@@ -11,6 +11,7 @@ export class UserController {
 
 	@Get("test")
 	test(@Res() res: Response) {
+    console.log('wwwwwwwwwwwwwwwwwww')
 		return res.json({ hello: "hello" })
 	}
 	@Get("info")
@@ -28,4 +29,10 @@ export class UserController {
 	getUsersReddits(@Req() req: IRequest) {
 		return this.userService.getUsersReddits(req.user.id)
 	}
+
+  @Get("me")
+  @UseGuards(JwtAuthGuard)
+  getUser(@Req() req:IRequest) {
+    console.log("www")
+  }
 }

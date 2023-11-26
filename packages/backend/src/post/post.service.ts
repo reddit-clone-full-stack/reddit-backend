@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common"
+import { Injectable, Logger } from "@nestjs/common"
 
 import { PrismaService } from "../prisma/prisma.service"
 import {
@@ -16,6 +16,8 @@ enum PostType {
 }
 @Injectable()
 export class PostService {
+  private readonly logger = new Logger(PostService.name);
+
 	constructor(private prismaService: PrismaService) {}
 	async getPost(postId: number) {
 		return await this.prismaService.post.findFirst({
@@ -70,26 +72,33 @@ export class PostService {
 		}
 	}
 	async getAllPosts(cursor: number) {
+    this.logger.log("hello")
 		let result = null
-		if (cursor) {
-			result = await this.prismaService.post.findMany({
-				...getAllPostsQuery(null),
-				cursor: {
-					id: cursor
-				},
-				skip: 1,
-				orderBy: {
-					createdAt: "desc"
-				}
-			})
-		} else {
-			result = await this.prismaService.post.findMany({
-				...getAllPostsQuery(null),
-				orderBy: {
-					createdAt: "desc"
-				}
-			})
-		}
+    try {
+      if (cursor) {
+        result = await this.prismaService.post.findMany({
+          ...getAllPostsQuery(null),
+          cursor: {
+            id: cursor
+          },
+          skip: 1,
+          orderBy: {
+            createdAt: "desc"
+          }
+        })
+      } else {
+        result = await this.prismaService.post.findMany({
+          ...getAllPostsQuery(null),
+          orderBy: {
+            createdAt: "desc"
+          }
+        })
+        console.log("result")
+      }
+    } catch (error) {
+      console.log("eweqew")
+      this.logger.error(error.msg)
+    }
 		const myCursor = result.length === 20 ? result[result.length - 1].id : null
 
 		return {

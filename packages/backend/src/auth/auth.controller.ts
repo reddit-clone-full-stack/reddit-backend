@@ -7,6 +7,7 @@ import { AuthService } from "./auth.service"
 import { AuthSignInDto, AuthSignUpDto } from "./dto/auth.dto"
 import { JwtAuthGuard } from "./guards"
 
+const cookieOptions = { httpOnly: true, secure: true, maxAge: 30 * 24 * 60 * 60 * 1000 }
 @Controller("auth")
 export class AuthController {
 	constructor(private authService: AuthService) {}
@@ -62,11 +63,7 @@ export class AuthController {
 	}
 
 	@Get("logout")
-	async logout(@Res({ passthrough: true }) res: Response) {
-		res.clearCookie("refreshToken")
-		return {
-			message: "logout success"
-		}
-	}
+	async logout(@Req() req:IRequest, @Res({ passthrough: true }) res: Response) {
+    res.clearCookie("refreshToken")
+  }
 }
-const cookieOptions = { httpOnly: true, secure: true, maxAge: 30 * 24 * 60 * 60 * 1000 }

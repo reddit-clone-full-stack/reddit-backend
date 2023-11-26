@@ -7,8 +7,14 @@ import { AppModule } from "./app.module"
 
 const port = process.env.PORT || 3333
 
+process.on('uncaughtException', function (err) {
+  console.log(err);
+});
+
 async function bootstrap() {
-	const app = await NestFactory.create(AppModule)
+	const app = await NestFactory.create(AppModule, {
+    logger: ['debug', 'error', 'log', "verbose", "warn"]
+  })
 	app.enableCors({
 		credentials: true,
 		origin: [
